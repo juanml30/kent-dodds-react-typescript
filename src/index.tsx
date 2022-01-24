@@ -5,7 +5,10 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
 function Greeting() {
-    const [name, setName] = useState("");
+    const [name, setName] = useState(window.localStorage.getItem("name") || "");
+    React.useEffect(() => {
+        window.localStorage.setItem("name", name);
+    });
     const handleChange = (event: BaseSyntheticEvent) =>
         setName(event.target.value);
     return (
@@ -17,6 +20,7 @@ function Greeting() {
                     name="name"
                     id="name"
                     onChange={handleChange}
+                    value={name}
                 />
             </form>
             {name ? <h1>{name}</h1> : <h5>Ingrese un nombre por favor</h5>}
