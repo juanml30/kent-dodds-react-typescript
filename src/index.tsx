@@ -4,27 +4,19 @@ import "./index.css";
 /* import App from "./App"; */
 import reportWebVitals from "./reportWebVitals";
 
-interface SayHelloProps {
-    firstName: string;
-    lastName: string;
+interface characterCountProps {
+    text: string;
 }
 
-/* const SayHello = (props: SayHelloProps) => {
-      <h1>
-          Hello {props.firstName} {props.lastName}
-      </h1>
-} */
-
-
-function SayHello(props:SayHelloProps):JSX.Element {
-    return (
-        <h1>
-            Hello {props.firstName} {props.lastName}
-        </h1>
-    );
+function CharacterCount(props: characterCountProps) {
+    const length = props.text.length ? props.text.length : "Not"
+    return <h1>You have {length} characters</h1>;
 }
 
-const element = <SayHello firstName={"Juan"} lastName={"Moreno"} />;
+const element = <>
+    <CharacterCount text="Jugando" />;
+    <CharacterCount text="" />;
+</> 
 
 ReactDOM.render(element, document.getElementById("root"));
 
