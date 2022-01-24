@@ -5,7 +5,9 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
 function Greeting() {
-    const [name, setName] = useState(window.localStorage.getItem("name") || "");
+    const [name, setName] = useState(() => {
+        return window.localStorage.getItem("name") || "";
+    });
     React.useEffect(() => {
         window.localStorage.setItem("name", name);
     });
