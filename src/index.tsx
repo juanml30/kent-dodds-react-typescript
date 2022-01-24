@@ -8,11 +8,14 @@ function Greeting() {
     const [name, setName] = useState(() => {
         return window.localStorage.getItem("name") || "";
     });
+
     React.useEffect(() => {
         window.localStorage.setItem("name", name);
-    });
+    }, [name]);
+
     const handleChange = (event: BaseSyntheticEvent) =>
         setName(event.target.value);
+
     return (
         <div>
             <form action="">
@@ -30,7 +33,17 @@ function Greeting() {
     );
 }
 
-ReactDOM.render(<Greeting />, document.getElementById("root"));
+function App() {
+    const [count, setCount] = useState(0);
+    return (
+        <>
+            <button onClick={() => setCount(() => count + 1)}>{count}</button>
+            <Greeting />
+        </>
+    );
+}
+
+ReactDOM.render(<App />, document.getElementById("root"));
 
 /* ReactDOM.render(
   <React.StrictMode>
