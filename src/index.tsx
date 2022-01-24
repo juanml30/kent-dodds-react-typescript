@@ -1,40 +1,45 @@
-import React, { CSSProperties } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 /* import App from "./App"; */
 import reportWebVitals from "./reportWebVitals";
 
-interface BoxProps {
-    size: string;
-    style: CSSProperties;
-    children: string;
+const state = { eventCount: 0, userName: "" };
+
+interface newStateProps {
+    eventCount?: number;
+    userName?: string
 }
 
-function Box(props: BoxProps) {
-    let size: string = "";
-    props.size ? size = props.size : size = "box--small"
+function setState(newState: newStateProps) {
+    Object.assign(state, newState);
+    renderApp();
+}
+
+function App() {
+    function handleClick() {
+        setState({ eventCount: state.eventCount + 1 });
+    }
     return (
-        <div className={`box box--${size}`} style={props.style}>
-            {props.children}
+        <div>
+            <p>There have been {state.eventCount} events.</p>
+            <button onClick={handleClick}>Click Me</button>
+            <p>You Typed: {state.userName}</p>
+            <div>
+                <input
+                    type="text"
+                    onChange={event => setState({userName: event.target.value}) }
+                />
+            </div>
         </div>
     );
 }
 
-const element = (
-    <div>
-        <Box size="small" style={{ backgroundColor: "lightblue" }}>
-            Small Lightblue box
-        </Box>
-        <Box size="medium" style={{ backgroundColor: "pink" }}>
-            medium pink box
-        </Box>
-        <Box size="large" style={{ backgroundColor: "orange" }}>
-            large orange box
-        </Box>
-    </div>
-);
+function renderApp() {
+    ReactDOM.render(<App />, document.getElementById("root"));
+}
 
-ReactDOM.render(element, document.getElementById("root"));
+renderApp();
 
 /* ReactDOM.render(
   <React.StrictMode>
