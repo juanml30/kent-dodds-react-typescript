@@ -1,25 +1,40 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 /* import App from "./App"; */
 import reportWebVitals from "./reportWebVitals";
 
-function tick() {
-    const time = new Date().toLocaleTimeString();
-
-    const element = (
-        <div>
-            <input type="text" value={time} />
-            <input type="text" value={time} />
-        </div>
-    )
-
-    ReactDOM.render(element, document.getElementById("root"));
+interface BoxProps {
+    size: string;
+    style: CSSProperties;
+    children: string;
 }
 
-tick()
+function Box(props: BoxProps) {
+    let size: string = "";
+    props.size ? size = props.size : size = "box--small"
+    return (
+        <div className={`box box--${size}`} style={props.style}>
+            {props.children}
+        </div>
+    );
+}
 
-setInterval(tick,1000 )
+const element = (
+    <div>
+        <Box size="small" style={{ backgroundColor: "lightblue" }}>
+            Small Lightblue box
+        </Box>
+        <Box size="medium" style={{ backgroundColor: "pink" }}>
+            medium pink box
+        </Box>
+        <Box size="large" style={{ backgroundColor: "orange" }}>
+            large orange box
+        </Box>
+    </div>
+);
+
+ReactDOM.render(element, document.getElementById("root"));
 
 /* ReactDOM.render(
   <React.StrictMode>
