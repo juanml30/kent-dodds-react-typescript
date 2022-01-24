@@ -4,17 +4,27 @@ import "./index.css";
 /* import App from "./App"; */
 import reportWebVitals from "./reportWebVitals";
 
-interface messageProps {
-  msg: string
+interface SayHelloProps {
+    firstName: string;
+    lastName: string;
 }
 
-const Message = (props: messageProps):JSX.Element => <div className="message">{props.msg}</div>
-const element = (
-  <div className="container">
-    <Message msg="Hello World" />
-    <Message msg= "Bye World" />
-  </div>
-)
+/* const SayHello = (props: SayHelloProps) => {
+      <h1>
+          Hello {props.firstName} {props.lastName}
+      </h1>
+} */
+
+
+function SayHello(props:SayHelloProps):JSX.Element {
+    return (
+        <h1>
+            Hello {props.firstName} {props.lastName}
+        </h1>
+    );
+}
+
+const element = <SayHello firstName={"Juan"} lastName={"Moreno"} />;
 
 ReactDOM.render(element, document.getElementById("root"));
 
