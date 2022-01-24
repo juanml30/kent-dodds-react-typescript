@@ -1,45 +1,30 @@
-import React from "react";
+import React, { BaseSyntheticEvent, useState } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 /* import App from "./App"; */
 import reportWebVitals from "./reportWebVitals";
 
-const state = { eventCount: 0, userName: "" };
-
-interface newStateProps {
-    eventCount?: number;
-    userName?: string
-}
-
-function setState(newState: newStateProps) {
-    Object.assign(state, newState);
-    renderApp();
-}
-
-function App() {
-    function handleClick() {
-        setState({ eventCount: state.eventCount + 1 });
-    }
+function Greeting() {
+    const [name, setName] = useState("");
+    const handleChange = (event: BaseSyntheticEvent) =>
+        setName(event.target.value);
     return (
         <div>
-            <p>There have been {state.eventCount} events.</p>
-            <button onClick={handleClick}>Click Me</button>
-            <p>You Typed: {state.userName}</p>
-            <div>
+            <form action="">
+                <label htmlFor="name">Name:</label>
                 <input
                     type="text"
-                    onChange={event => setState({userName: event.target.value}) }
+                    name="name"
+                    id="name"
+                    onChange={handleChange}
                 />
-            </div>
+            </form>
+            {name ? <h1>{name}</h1> : <h5>Ingrese un nombre por favor</h5>}
         </div>
     );
 }
 
-function renderApp() {
-    ReactDOM.render(<App />, document.getElementById("root"));
-}
-
-renderApp();
+ReactDOM.render(<Greeting />, document.getElementById("root"));
 
 /* ReactDOM.render(
   <React.StrictMode>
