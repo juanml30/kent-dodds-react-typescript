@@ -6,7 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 
 function Greeting() {
     
-    const [name, setName] = useState(() => {
+    const [name, setName] = React.useState(() => {
         return window.localStorage.getItem("name") || "";
     });
 
