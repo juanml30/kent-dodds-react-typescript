@@ -4,21 +4,22 @@ import "./index.css";
 /* import App from "./App"; */
 import reportWebVitals from "./reportWebVitals";
 
-interface characterCountProps {
-    text: string;
+function tick() {
+    const time = new Date().toLocaleTimeString();
+
+    const element = (
+        <div>
+            <input type="text" value={time} />
+            <input type="text" value={time} />
+        </div>
+    )
+
+    ReactDOM.render(element, document.getElementById("root"));
 }
 
-function CharacterCount(props: characterCountProps) {
-    const length = props.text.length ? props.text.length : "Not"
-    return <h1>You have {length} characters</h1>;
-}
+tick()
 
-const element = <>
-    <CharacterCount text="Jugando" />;
-    <CharacterCount text="" />;
-</> 
-
-ReactDOM.render(element, document.getElementById("root"));
+setInterval(tick,1000 )
 
 /* ReactDOM.render(
   <React.StrictMode>
