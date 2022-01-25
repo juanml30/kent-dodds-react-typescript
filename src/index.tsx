@@ -1,24 +1,38 @@
-import React, { BaseSyntheticEvent } from "react";
+import React, { BaseSyntheticEvent, useState } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 /* import App from "./App"; */
 import reportWebVitals from "./reportWebVitals";
 
-function handleSubmit(event: BaseSyntheticEvent) {
-    event.preventDefault()
-    const username = event.target.elements.username.value
-    console.log(username)
-}
-
 function UsernameForm() {
+    const [username, setUsername] = React.useState("");
+    const isLowerCase = username === username.toLowerCase();
+    const error = isLowerCase ? null : "Username must be lower case";
+
+    function handleSubmit(event: BaseSyntheticEvent) {
+        event.preventDefault();
+        const username = event.target.elements.username.value;
+        console.log(username);
+    }
+
+    function handleChange(event: BaseSyntheticEvent) {
+        setUsername(event.target.value);
+    }
+
     return (
         <form onSubmit={handleSubmit}>
             <div>
                 <label htmlFor="username">
                     Username:
-                    <input type="text" id="username" />
+                    <input
+                        onChange={handleChange}
+                        type="text"
+                        id="username"
+                        placeholder="please use Lowercase for your username"
+                    />
                 </label>
-                <button type="submit">Save</button>
+                <div style={{color: "red"}}>{error}</div>
+                <button type="submit" disabled={Boolean(error)}>Save</button>
             </div>
         </form>
     );
