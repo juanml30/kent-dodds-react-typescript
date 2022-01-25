@@ -1,44 +1,74 @@
-import React, { BaseSyntheticEvent, useState } from "react";
+import React, { BaseSyntheticEvent, ChangeEventHandler, useState } from "react";
 import ReactDOM from "react-dom";
+import { JsxAttribute, JsxAttributes } from "typescript";
 import "./index.css";
 /* import App from "./App"; */
 import reportWebVitals from "./reportWebVitals";
 
-function UsernameForm() {
-    const [username, setUsername] = React.useState("");
-    const isLowerCase = username === username.toLowerCase();
-    const error = isLowerCase ? null : "Username must be lower case";
+interface NameProps {
+    name: string;
+    onNameChange: ChangeEventHandler;
+}
 
-    function handleSubmit(event: BaseSyntheticEvent) {
-        event.preventDefault();
-        const username = event.target.elements.username.value;
-        console.log(username);
-    }
+function Name({ name, onNameChange }: NameProps) {
+    return (
+        <div>
+            <label htmlFor="name">Name: </label>
+            <input type="text" value={name} onChange={onNameChange} />
+        </div>
+    );
+}
 
-    function handleChange(event: BaseSyntheticEvent) {
-        setUsername(event.target.value);
-    }
+interface FavoriteAnimalProps {
+    animal: string;
+    onAnimalChange: ChangeEventHandler;
+}
+
+function FavoriteAnimal({ animal, onAnimalChange }: FavoriteAnimalProps) {
+    return (
+        <div>
+            <label htmlFor="animal">Favorite Animal: </label>
+            <input
+                type="text"
+                onChange={onAnimalChange}
+            />
+        </div>
+    );
+}
+
+interface DisplayProps {
+    name: string;
+    animal: string;
+}
+
+function Display({ name, animal }: DisplayProps) {
+    return <div>{`Hey ${name}, your favorite animal is ${animal}!`}</div>;
+}
+
+function App() {
+    const [name, setName] = React.useState("");
+    const [animal, setAnimal] = React.useState("");
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label htmlFor="username">
-                    Username:
-                    <input
-                        onChange={handleChange}
-                        type="text"
-                        id="username"
-                        placeholder="please use Lowercase for your username"
-                    />
-                </label>
-                <div style={{color: "red"}}>{error}</div>
-                <button type="submit" disabled={Boolean(error)}>Save</button>
-            </div>
+        <form>
+            <Name
+                name={name}
+                onNameChange={(event: BaseSyntheticEvent) =>
+                    setName(event.target.value)
+                }
+            />
+            <FavoriteAnimal
+                animal={animal}
+                onAnimalChange={(event: BaseSyntheticEvent) =>
+                    setAnimal(event.target.value)
+                }
+            />
+            <Display name={name} animal={animal} />
         </form>
     );
 }
 
-ReactDOM.render(<UsernameForm />, document.getElementById("root"));
+ReactDOM.render(<App />, document.getElementById("root"));
 
 /* ReactDOM.render(
   <React.StrictMode>
