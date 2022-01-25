@@ -1,54 +1,34 @@
-import React, { BaseSyntheticEvent, useState } from "react";
+import React, { BaseSyntheticEvent } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 /* import App from "./App"; */
 import reportWebVitals from "./reportWebVitals";
 
-function Greeting() {
-    
-    const [name, setName] = React.useState(() => {
-        return window.localStorage.getItem("name") || "";
-    });
+function handleSubmit(event: BaseSyntheticEvent) {
+    event.preventDefault()
+    const username = event.target.elements.username.value
+    console.log(username)
+}
 
-    React.useEffect(() => {
-        window.localStorage.setItem("name", name);
-    }, [name]);
-
-    const handleChange = (event: BaseSyntheticEvent) =>
-        setName(event.target.value);
-
+function UsernameForm() {
     return (
-        <div>
-            <form action="">
-                <label htmlFor="name">Name:</label>
-                <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    onChange={handleChange}
-                    value={name}
-                />
-            </form>
-            {name ? <h1>{name}</h1> : <h5>Ingrese un nombre por favor</h5>}
-        </div>
+        <form onSubmit={handleSubmit}>
+            <div>
+                <label htmlFor="username">
+                    Username:
+                    <input type="text" id="username" />
+                </label>
+                <button type="submit">Save</button>
+            </div>
+        </form>
     );
 }
 
-function App() {
-    const [count, setCount] = useState(0);
-    return (
-        <>
-            <button onClick={() => setCount(() => count + 1)}>{count}</button>
-            <Greeting />
-        </>
-    );
-}
-
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<UsernameForm />, document.getElementById("root"));
 
 /* ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App />a
   </React.StrictMode>,
   document.getElementById('root')
 ); */
