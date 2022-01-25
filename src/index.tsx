@@ -1,46 +1,70 @@
-import React, { BaseSyntheticEvent, useState } from "react";
+import React, { BaseSyntheticEvent, ChangeEventHandler, useState } from "react";
 import ReactDOM from "react-dom";
+import { JsxAttribute, JsxAttributes } from "typescript";
 import "./index.css";
 /* import App from "./App"; */
 import reportWebVitals from "./reportWebVitals";
 
-function Greeting() {
-    
-    const [name, setName] = React.useState(() => {
-        return window.localStorage.getItem("name") || "";
-    });
+interface NameProps {
+    name: string;
+    onNameChange: ChangeEventHandler;
+}
 
-    React.useEffect(() => {
-        window.localStorage.setItem("name", name);
-    }, [name]);
-
-    const handleChange = (event: BaseSyntheticEvent) =>
-        setName(event.target.value);
-
+function Name({ name, onNameChange }: NameProps) {
     return (
         <div>
-            <form action="">
-                <label htmlFor="name">Name:</label>
-                <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    onChange={handleChange}
-                    value={name}
-                />
-            </form>
-            {name ? <h1>{name}</h1> : <h5>Ingrese un nombre por favor</h5>}
+            <label htmlFor="name">Name: </label>
+            <input type="text" value={name} onChange={onNameChange} />
         </div>
     );
 }
 
-function App() {
-    const [count, setCount] = useState(0);
+interface FavoriteAnimalProps {
+    animal: string;
+    onAnimalChange: ChangeEventHandler;
+}
+
+function FavoriteAnimal({ animal, onAnimalChange }: FavoriteAnimalProps) {
     return (
-        <>
-            <button onClick={() => setCount(() => count + 1)}>{count}</button>
-            <Greeting />
-        </>
+        <div>
+            <label htmlFor="animal">Favorite Animal: </label>
+            <input
+                type="text"
+                onChange={onAnimalChange}
+            />
+        </div>
+    );
+}
+
+interface DisplayProps {
+    name: string;
+    animal: string;
+}
+
+function Display({ name, animal }: DisplayProps) {
+    return <div>{`Hey ${name}, your favorite animal is ${animal}!`}</div>;
+}
+
+function App() {
+    const [name, setName] = React.useState("");
+    const [animal, setAnimal] = React.useState("");
+
+    return (
+        <form>
+            <Name
+                name={name}
+                onNameChange={(event: BaseSyntheticEvent) =>
+                    setName(event.target.value)
+                }
+            />
+            <FavoriteAnimal
+                animal={animal}
+                onAnimalChange={(event: BaseSyntheticEvent) =>
+                    setAnimal(event.target.value)
+                }
+            />
+            <Display name={name} animal={animal} />
+        </form>
     );
 }
 
@@ -48,7 +72,7 @@ ReactDOM.render(<App />, document.getElementById("root"));
 
 /* ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App />a
   </React.StrictMode>,
   document.getElementById('root')
 ); */
