@@ -1,71 +1,94 @@
-import React, { BaseSyntheticEvent, ChangeEventHandler, useState } from "react";
+import React, {
+  BaseSyntheticEvent,
+  useState,
+} from "react";
+
 import ReactDOM from "react-dom";
-import { JsxAttribute, JsxAttributes } from "typescript";
 import "./index.css";
 /* import App from "./App"; */
 import reportWebVitals from "./reportWebVitals";
+import type { Query } from "@favware/graphql-pokemon";
 
-interface NameProps {
-    name: string;
-    onNameChange: ChangeEventHandler;
+interface PokemonInfoProps {
+  pokemonName: string;
 }
 
-function Name({ name, onNameChange }: NameProps) {
-    return (
-        <div>
-            <label htmlFor="name">Name: </label>
-            <input type="text" value={name} onChange={onNameChange} />
-        </div>
-    );
+interface GraphQLPokemonResponse<K extends keyof Omit<Query, "__typename">> {
+  data: Record<K, Omit<Query[K], "__typename">>;
 }
 
-interface FavoriteAnimalProps {
-    animal: string;
-    onAnimalChange: ChangeEventHandler;
-}
-
-function FavoriteAnimal({ animal, onAnimalChange }: FavoriteAnimalProps) {
-    return (
-        <div>
-            <label htmlFor="animal">Favorite Animal: </label>
-            <input
-                type="text"
-                onChange={onAnimalChange}
-            />
-        </div>
-    );
-}
-
-interface DisplayProps {
-    name: string;
-    animal: string;
-}
-
-function Display({ name, animal }: DisplayProps) {
-    return <div>{`Hey ${name}, your favorite animal is ${animal}!`}</div>;
+function PokemonInfo({ pokemonName }: PokemonInfoProps) {
+  const [pokemon, setPokemon] = useState({num: 0, species:"",sprite:""});
+  React.useEffect(() => {
+    if (!pokemonName) {
+      return;
+    }
+    fetchPokemon(pokemonName).then((pokemonData) => {
+      setPokemon(pokemonData);
+    });
+  }, [pokemonName]);
+  if (pokemon.num === 0 || !pokemon) {
+    return <div>No era pokemon</div>;
+  }
+  return (
+    <>
+      <pre>
+        {console.log(pokemon.sprite)}
+        {JSON.stringify(pokemon, null, 2)}
+      </pre>
+      <img src={pokemon.sprite} alt="" />
+    </>
+  );
 }
 
 function App() {
-    const [name, setName] = React.useState("");
-    const [animal, setAnimal] = React.useState("");
+  const [pokemonName, setPokemonName] = React.useState("");
 
-    return (
-        <form>
-            <Name
-                name={name}
-                onNameChange={(event: BaseSyntheticEvent) =>
-                    setName(event.target.value)
-                }
-            />
-            <FavoriteAnimal
-                animal={animal}
-                onAnimalChange={(event: BaseSyntheticEvent) =>
-                    setAnimal(event.target.value)
-                }
-            />
-            <Display name={name} animal={animal} />
-        </form>
-    );
+  function handleSubmit(event: BaseSyntheticEvent) {
+    event.preventDefault();
+    setPokemonName(event.target.elements.pokemonName.value);
+  }
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="pokemonName">Pokemon Name</label>
+        <div>
+          <input type="text" id="pokemonName" />
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+      <hr />
+      <PokemonInfo pokemonName={pokemonName} />
+    </div>
+  );
+}
+
+function fetchPokemon(name: string) {
+  const pokemonQuery = `
+  getPokemon(pokemon: ${name} reverseFlavorTexts: true takeFlavorTexts: 1) {
+		num
+		species
+    sprite
+  }
+  `;
+
+  return window
+    .fetch("https://graphqlpokemon.favware.tech/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `
+      {
+        ${pokemonQuery}
+      }
+    `,
+      }),
+    })
+    .then((res) => res.json() as Promise<GraphQLPokemonResponse<"getPokemon">>)
+    .then((response) => response.data.getPokemon);
 }
 
 ReactDOM.render(<App />, document.getElementById("root"));
