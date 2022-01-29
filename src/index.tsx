@@ -1,7 +1,4 @@
-import React, {
-  BaseSyntheticEvent,
-  useState,
-} from "react";
+import React, { BaseSyntheticEvent, useState } from "react";
 
 import ReactDOM from "react-dom";
 import "./index.css";
@@ -18,27 +15,49 @@ interface GraphQLPokemonResponse<K extends keyof Omit<Query, "__typename">> {
 }
 
 function PokemonInfo({ pokemonName }: PokemonInfoProps) {
-  const [pokemon, setPokemon] = useState({num: 0, species:"",sprite:""});
+  const [status, setStatus] = useState("idle");
+  const [pokemon, setPokemon] = useState({ num: 0, species: "", sprite: "" });
+  const [error, setError] = useState();
   React.useEffect(() => {
     if (!pokemonName) {
       return;
     }
-    fetchPokemon(pokemonName).then((pokemonData) => {
-      setPokemon(pokemonData);
-    });
+    setStatus("Pending");
+    fetchPokemon(pokemonName).then(
+      (pokemonData) => {
+        setStatus("Resolved");
+        setPokemon(pokemonData);
+      },
+      (errorData) => {
+        setStatus("Rejected")
+        setError(errorData);
+      }
+    );
   }, [pokemonName]);
-  if (pokemon.num === 0 || !pokemon) {
-    return <div>No era pokemon</div>;
+
+  if (status === "idle") {
+    return <h1>Oh Si!!!</h1>;
   }
+
+  if (status === "Rejected") {
+    return <h1>Oh no!!!</h1>;
+  }
+
+  if (status === "Pending") {
+    return <div>Wait Please</div>;
+  }
+
+  if (status === "Resolved") {
   return (
-    <>
+    <div>
       <pre>
-        {console.log(pokemon.sprite)}
         {JSON.stringify(pokemon, null, 2)}
       </pre>
       <img src={pokemon.sprite} alt="" />
-    </>
+    </div>
   );
+}
+return <></>
 }
 
 function App() {
